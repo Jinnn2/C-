@@ -1,0 +1,18 @@
+{
+  "version": "q2-v5-dp-correction-counterfactual",
+  "formal_days": 334,
+  "corrected_intervals": 1074,
+  "correction_rate": 0.022330339321357286,
+  "totals": {
+    "reference_expected_cost_yuan": 575862.8123817923,
+    "final_expected_cost_yuan": 658659.9911600337,
+    "expected_gain_yuan": -82797.17877824136,
+    "reference_realized_cost_yuan": 1071094.9859117172,
+    "final_realized_cost_yuan": 1062499.156689757,
+    "realized_gain_yuan": 8595.82922196012
+  },
+  "expected_gain_per_correction_yuan": -77.0923452311372,
+  "realized_gain_per_correction_yuan": 8.003565383575532,
+  "interpretation": "one-step emergency-cost counterfactual; SOC propagation remains in V5 execution",
+  "selected_threshold": 800.0
+}

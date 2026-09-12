@@ -23,6 +23,12 @@
 - [第二问V5实验报告（V2-B合同 + V4 delayed_1桥接）](reports/q2_v5_experiment.md)
 - [第二问V5混合控制实验报告（主候选）](reports/q2_v5_hybrid_experiment.md)
 - [第二问V5混合控制结果工作簿](results/result2_v5_delayed1_hybrid.xlsx)
+- [第二问V5 DP纠偏收益诊断](reports/q2_v5_dp_gain.md)
+- [第二问V5.1清晨SOC夜间储备报告](reports/q2_v5_1_night_reserve.md)
+- [第二问V5.1联合控制结果工作簿](results/result2_v5_1_night_reserve_joint.xlsx)
+- [第二问V6设计（跨日DP终值函数协调与鲁棒混合调度）](docs/问题二_v6设计.md)
+- [第二问V6实验报告](reports/q2_v6_experiment.md)
+- [第二问V6结果工作簿](results/result2_v6.xlsx)
 - 数据库：`data/processed/microgrid.sqlite`
 - CSV与源文件清单：`data/processed/`
 
@@ -39,6 +45,9 @@ python scripts/solve_q2_v2c.py
 python scripts/solve_q2_v3.py
 python scripts/solve_q2_v5.py
 python scripts/solve_q2_v5_hybrid.py
+python scripts/solve_q2_v6.py
+python scripts/analyze_v5_dp_gain.py
+python scripts/solve_q2_v5_1_night_reserve.py
 ```
 
 脚本只读取原题和附件，重建本项目的派生数据与检查报告。发生数据结构或数值错误时返回非零退出码；此时不要使用旧的派生数据。脚本校验原始文件执行前后的SHA256，检查通过后才发布新派生数据库。
@@ -56,3 +65,4 @@ python scripts/solve_q2_v5_hybrid.py
 第二问V3新增24/48/72小时无每日SOC目标的跨日优化，次日购电使用连续传递的SOC。三组共用无目标的一月预热和成熟72小时误差样本；旧V1/V2中的每日SOC惩罚及硬边界只作为受限模型对照。复现入口为 `scripts/solve_q2_v3.py`，各组全年执行、求解日志、预测来源、期末残值及视野敏感性在 `results/q2_v3/`。日内反馈与次日购电共同重算的R3及区间内即时保护尚未实现；第三四问尚未实现。后续求解必须遵守发布时间约束，不能直接将数据库中的未来实际值作为已知输入。
 
 第二问V5新增两个隔离实验：`scripts/solve_q2_v5.py` 固定V2-B购电合同、替换V4 delayed_1储能控制；`scripts/solve_q2_v5_hybrid.py` 在V2-B低价充电/高价放电参考动作上加入一时段延迟DP安全纠偏，并只用1月选择阈值。主候选正式期总费用14596837.877306元，比V2-B高9485.919251元（0.0650%）；购电合同逐段完全一致，延迟、物理、费用和工作簿回读审计通过。延迟安全裕量的独立候选实验见 `scripts/solve_q2_v5_robust.py`，其1月选择退化为beta=0，因此不作为主结果。
+V5的纠偏动作诊断见 `reports/q2_v5_dp_gain.md`：1074个正式期纠偏时段的一步场景期望收益为-82797.178778元，而真实观测回放收益为+8595.829221元，说明DP动作不能按无条件正收益使用。V5.1固定V2-B购电合同，在06:00加入软SOC目标并比较静态目标与动态场景目标；1月选中静态9000 kWh，但334天正式期夜间目标单独作用总费用18258699.232865元，和V2-B相比恶化3671347.274809元。接入delayed_1后总费用16130306.759818元，仍比V2-B高1542954.801763元；因此本轮实验不把“清晨SOC接近10800”作为主策略，输出与审计见 `results/q2_v5_1_night_reserve/`。
