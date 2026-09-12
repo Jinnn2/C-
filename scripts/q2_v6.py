@@ -13,12 +13,12 @@ from q2_v4 import PWL, backward, reserve, action, ETA, LOWER, UPPER, LIMIT
 
 def tomorrow_cuts(f_tom: np.ndarray, net_tom: np.ndarray, price: np.ndarray,
                   terminal_soc: Optional[float] = None) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-    """Compute the convex piecewise linear cost-to-go function for tomorrow via exact LP.
+    """Compute the convex piecewise linear cost-to-go function for tomorrow by sampling exact LP values and convex interpolation.
     
     Returns:
         soc_pts: Support SOC grid points in [1200, 10800]
         costs: Optimal risk procurement costs at each support point
-        slopes: Secant subgradients for cutting plane inequalities
+        slopes: Secant slopes (upper interpolation, not supporting subgradients)
     """
     n = 144
     k = len(net_tom)
@@ -79,6 +79,8 @@ def tomorrow_cuts(f_tom: np.ndarray, net_tom: np.ndarray, price: np.ndarray,
 
     costs = np.array(costs)
     slopes = np.diff(costs) / np.diff(soc_pts)
+    if np.min(np.diff(slopes)) < -1e-7:
+        raise ValueError("Nonconvex sampled continuation value")
     return soc_pts, costs, slopes
 
 
@@ -150,7 +152,7 @@ def risk_plan_v6(forecast: np.ndarray, net_scenarios: np.ndarray, price: np.ndar
     start = time.perf_counter()
     res = milp(cost, integrality=integer, bounds=Bounds(low, high),
                constraints=LinearConstraint(A.tocsr(), lower, upper),
-               options={'mip_rel_gap': 1e-6, 'time_limit': 60})
+               options={'mip_rel_gap': 1e-8, 'time_limit': 60})
     seconds = time.perf_counter() - start
     if not res.success:
         raise RuntimeError(f'V6 MILP failed: {res.message}')
@@ -189,6 +191,10 @@ def compute_reserves_v6(net_today: np.ndarray, purchase: np.ndarray, price: np.n
 def v6_hybrid_action(residual: float, soc: float, level: float,
                      ref_charge: float, ref_discharge: float, threshold: float) -> Tuple[float, float]:
     """Execute reference arbitrage action unless delayed residual breaches guard threshold."""
+    if np.isinf(threshold):
+        # Explicit reference-only ablation: no reserve clipping or feedback.
+        return (min(max(ref_charge, 0.), LIMIT, max(0., UPPER-soc)/ETA),
+                min(max(ref_discharge, 0.), LIMIT, ETA*max(0., soc-LOWER)))
     dp_charge, dp_discharge = action(residual, soc, level)
     charge, discharge = float(ref_charge), float(ref_discharge)
     if residual > threshold:

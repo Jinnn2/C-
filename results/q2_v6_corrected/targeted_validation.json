@@ -1,0 +1,29 @@
+[
+  {
+    "day_index": 31,
+    "causality_suffix_invariance": true,
+    "interpolated_48h_objective": 83168.26175122609,
+    "direct_48h_objective": 83167.97425122607,
+    "approximation_gap_yuan": 0.2875000000203727,
+    "chosen_soc": 8700.0,
+    "continuation_interpolation_error_yuan": 0.28750000000582077
+  },
+  {
+    "day_index": 171,
+    "causality_suffix_invariance": true,
+    "interpolated_48h_objective": 80311.15932222537,
+    "direct_48h_objective": 80310.87182222534,
+    "approximation_gap_yuan": 0.2875000000349246,
+    "chosen_soc": 8700.0,
+    "continuation_interpolation_error_yuan": 0.28750000004220055
+  },
+  {
+    "day_index": 265,
+    "causality_suffix_invariance": true,
+    "interpolated_48h_objective": 86555.13798684174,
+    "direct_48h_objective": 86554.85048684174,
+    "approximation_gap_yuan": 0.28750000000582077,
+    "chosen_soc": 8700.0,
+    "continuation_interpolation_error_yuan": 0.2874999999985448
+  }
+]

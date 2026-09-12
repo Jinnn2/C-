@@ -12,7 +12,7 @@ import sqlite3
 import time
 from datetime import datetime, timedelta
 from pathlib import Path
-from typing import Dict, Any, List
+from typing import Dict, Any, List, Tuple
 
 import numpy as np
 import scipy
@@ -28,7 +28,7 @@ from solve_q2_v2a import read_execution, fingerprints, metrics
 from validate_q2 import audit
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / 'results/q2_v6'
+OUT = ROOT / 'results/q2_v6_corrected'
 
 
 def write_csv(name: str, rows: List[Dict[str, Any]]):
@@ -109,7 +109,8 @@ def hybrid_audit(rows: List[Dict[str, Any]], threshold: float):
         residual = observed - row['purchase_kwh']
         c, d = v6_hybrid_action(
             residual, row['soc_start_kwh'], row['reserve_kwh'],
-            row['reference_charge_kwh'], row['reference_discharge_kwh'], threshold
+            row['reference_charge_kwh'], row['reference_discharge_kwh'],
+            float('inf') if row['date'].endswith('12-31') else threshold
         )
         if max(abs(c - row['charge_kwh']), abs(d - row['discharge_kwh'])) > 1e-6:
             raise ValueError(f'V6 action mismatch at date {row["date"]} slot {row["slot"]}')
@@ -139,80 +140,58 @@ def enrich_warmup(warmup_rows: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     return enriched
 
 
-def tune_january(actual: np.ndarray, price: np.ndarray, dates: List[str],
-                 threshold_candidates: List[float]) -> Tuple[float, List[Dict[str, Any]]]:
-    table = []
-    # Pre-solve January 15-31 reference plans to avoid repeated MILP solves
+def causal_inputs(actual, day):
+    """At day 00:00 accept ONLY completed days; archive lead-two errors."""
+    history = np.asarray(actual[:day]).copy()
+    if len(history) != day:
+        raise ValueError('Incomplete history')
+    today, _ = v3_forecast(history, days=2)
+    # Same frozen V2-B predictor for today's forecast.
+    from q2_model import predict
+    f_today = predict(history, Config())
+    past_today = []
+    past_tomorrow = []
+    for target in range(max(8, day-14), day):
+        past_today.append(history[target] - predict(history[:target], Config()))
+        issued, sources = v3_forecast(history[:target-1], days=2)
+        assert sources[1]['target_day'] == target
+        past_tomorrow.append(history[target] - issued[1])
+    # Preserve V2-B's eligible target day 7 in early development.
+    if day <= 21:
+        past_today = [history[t]-predict(history[:t], Config())
+                      for t in range(max(7, day-14), day)]
+    net_today = scenarios(f_today, past_today, 14)
+    f_tom = today[1]
+    samples = np.maximum(f_tom[None] + np.asarray(past_tomorrow), 0.)
+    return f_today, net_today, f_tom, samples[:,:,0]-samples[:,:,1]
+
+
+def tune_january(actual, price, dates, threshold_candidates):
+    # Inputs/continuation curves are exogenous; contracts are re-solved for
+    # each candidate's actual SOC, matching formal closed-loop execution.
     records = []
-    f_pre = BiasForecaster(Config())
-    for d in range(14):
-        f_pre.forecast(BiasConfig(window_days=7, load_strength=0, pv_strength=0))
-        f_pre.observe(actual[d])
-
-    ref_soc = 6000.0
-    for d in range(14, 31):
-        f_today, _ = f_pre.forecast(BiasConfig(window_days=7, load_strength=0, pv_strength=0))
-        net_today = scenarios(f_today, f_pre.residuals, 14)
-        if d == 30:
-            cuts = None
-            final_soc = 6000.0
-        else:
-            f_multi, _ = v3_forecast(actual[:d+1], days=2)
-            f_tom = f_multi[1]
-            errors = np.array(f_pre.residuals[-14:])
-            sample_tom = np.maximum(f_tom[None, :, :] + errors, 0.0)
-            net_tom = sample_tom[:, :, 0] - sample_tom[:, :, 1]
-            cuts = tomorrow_cuts(f_tom, net_tom, price, terminal_soc=6000.0 if d == 29 else None)
-            final_soc = None
-
-        p = risk_plan_v6(f_today, net_today, price, ref_soc, cuts=cuts, final_soc=final_soc)
-        levels = compute_reserves_v6(net_today, p['purchase'], price, cuts)
-        records.append(dict(
-            d=d, date=dates[d], forecast=f_today.copy(), net=net_today.copy(),
-            actual=actual[d].copy(), purchase=p['purchase'].copy(),
-            charge=p['charge'].copy(), discharge=p['discharge'].copy(),
-            levels=levels.copy(), cuts=cuts
-        ))
-        ref_soc += 0.9 * p['charge'].sum() - p['discharge'].sum() / 0.9
-        f_pre.observe(actual[d])
-
-    for idx, th in enumerate(threshold_candidates):
-        soc = 6000.0
-        planned_cost = 0.0
-        emergency_cost = 0.0
-        total_cost = 0.0
-        for rec in records:
-            p_purch = rec['purchase']
-            f_today = rec['forecast']
-            act = rec['actual']
-            nominal = f_today[:, 0] - f_today[:, 1]
-            c_sim = np.zeros(144)
-            d_sim = np.zeros(144)
-            for t in range(144):
-                observed = float(nominal[t]) if t == 0 else float(
-                    nominal[t] + act[t - 1, 0] - act[t - 1, 1] - nominal[t - 1])
-                res = observed - p_purch[t]
-                c, d_val = v6_hybrid_action(
-                    res, soc, rec['levels'][t], rec['charge'][t], rec['discharge'][t], th
-                )
-                c_sim[t] = c
-                d_sim[t] = d_val
-                soc += ETA * c - d_val / ETA
-            emerg = np.maximum(act[:, 0] + c_sim - p_purch - act[:, 1] - d_sim, 0.0)
-            p_cost = float(price @ p_purch)
-            e_cost = float((5 * price) @ emerg)
-            planned_cost += p_cost
-            emergency_cost += e_cost
-            total_cost += p_cost + e_cost
-
-        table.append(dict(
-            candidate_id=idx, threshold=float(th),
-            planned_cost_yuan=planned_cost, emergency_cost_yuan=emergency_cost,
-            total_cost_yuan=total_cost, end_soc=soc
-        ))
-
-    winner = min(table, key=lambda r: (r['total_cost_yuan'], r['candidate_id']))
-    return winner['threshold'], table
+    for day in range(14,31):
+        ft, nt, fm, nm = causal_inputs(actual, day)
+        cuts = None if day == 30 else tomorrow_cuts(
+            fm, nm, price, terminal_soc=6000. if day == 29 else None)
+        records.append((day,ft,nt,cuts))
+    table=[]
+    for idx, threshold in enumerate(threshold_candidates):
+        soc=6000.; planned=emergency=0.
+        for day,ft,nt,cuts in records:
+            plan=risk_plan_v6(ft,nt,price,soc,cuts,6000. if day==30 else None)
+            levels=compute_reserves_v6(nt,plan['purchase'],price,cuts)
+            # Common evaluation terminal: execute feasible final-day reference.
+            applied=float('inf') if day==30 else threshold
+            rows,soc=simulate_v6_hybrid(dates[day],plan['purchase'],ft,
+                actual[day],price,soc,levels,plan['charge'],plan['discharge'],applied)
+            summary=summarize(rows)
+            planned+=summary['planned_cost_yuan']; emergency+=summary['emergency_cost_yuan']
+        table.append(dict(candidate_id=idx,threshold=threshold,
+            planned_cost_yuan=planned,emergency_cost_yuan=emergency,
+            total_cost_yuan=planned+emergency,end_soc=soc))
+    winner=min(table,key=lambda r:(round(r['total_cost_yuan'],6),r['candidate_id']))
+    return winner['threshold'],table
 
 
 def main():
@@ -241,7 +220,7 @@ def main():
 
     # 2. January Parameter Tuning
     print('Tuning threshold on January 15-31...', flush=True)
-    candidates = [400.0, 600.0, 800.0, 1000.0, 100000.0]
+    candidates = [float('inf'), 400.0, 600.0, 800.0, 1000.0]
     best_threshold, tuning_table = tune_january(actual, price, dates, candidates)
     print(f'Selected January threshold: {best_threshold:.1f} kWh', flush=True)
     write_csv('january_validation', tuning_table)
@@ -278,20 +257,12 @@ def main():
 
         for d in range(31, 365):
             ds = dates[d]
-            f_today, _ = f.forecast(BiasConfig(window_days=7, load_strength=0, pv_strength=0))
-            net_today = scenarios(f_today, f.residuals, 14)
-
-            if d == 364:  # Dec 31
-                cuts = None
-                final_soc = 6000.0
+            f_today, net_today, f_tom, net_tom = causal_inputs(actual, d)
+            if d == 364:
+                cuts, final_soc = None, 6000.0
             else:
-                # Predict tomorrow using 2-day multi-horizon forecast
-                f_multi, _ = v3_forecast(actual[:d+1], days=2)
-                f_tom = f_multi[1]
-                errors = np.array(f.residuals[-14:])
-                sample_tom = np.maximum(f_tom[None, :, :] + errors, 0.0)
-                net_tom = sample_tom[:, :, 0] - sample_tom[:, :, 1]
-                cuts = tomorrow_cuts(f_tom, net_tom, price, terminal_soc=6000.0 if d == 363 else None)
+                cuts = tomorrow_cuts(f_tom, net_tom, price,
+                                     terminal_soc=6000.0 if d==363 else None)
                 final_soc = None
 
             plan = risk_plan_v6(f_today, net_today, price, current_soc, cuts=cuts, final_soc=final_soc)
@@ -299,7 +270,7 @@ def main():
 
             rows, current_soc = simulate_v6_hybrid(
                 ds, plan['purchase'], f_today, actual[d], price, current_soc,
-                levels, plan['charge'], plan['discharge'], best_threshold
+                levels, plan['charge'], plan['discharge'], float('inf') if d==364 else best_threshold
             )
             formal.extend(rows)
 
@@ -319,13 +290,15 @@ def main():
             ))
 
             trace_logs.append(dict(
-                date=ds, soc_start_kwh=rows[0]['soc_start_kwh'],
+                date=ds, history_available_through=dates[d-1],
+                tomorrow_target=(datetime.fromisoformat(ds)+timedelta(days=1)).date().isoformat(),
+                today_scenarios=len(net_today), tomorrow_scenarios=len(net_tom),
+                soc_start_kwh=rows[0]['soc_start_kwh'],
                 soc_end_kwh=rows[-1]['soc_end_kwh'],
                 emergency_kwh=d_summary['emergency_kwh'],
                 emergency_cost_yuan=d_summary['emergency_cost_yuan']
             ))
 
-            f.observe(actual[d])
             if (d + 1) % 30 == 0 or d == 364:
                 print(f'Completed through {ds} (d={d+1}/365)', flush=True)
 
@@ -368,8 +341,8 @@ def main():
         write_csv(name, data)
 
     # Export Excel Workbook
-    wb_path = ROOT / 'results/result2_v6.xlsx'
-    print('Exporting Excel workbook results/result2_v6.xlsx...', flush=True)
+    wb_path = ROOT / 'results/result2_v6_corrected.xlsx'
+    print('Exporting Excel workbook results/result2_v6_corrected.xlsx...', flush=True)
     workbook(formal, daily_stats, ev, wb_path)
     verify_export(wb_path, formal, daily_stats, ev)
     print('Workbook verified.', flush=True)
@@ -383,7 +356,7 @@ def main():
     saving = v1_formal_sum['total_cost_yuan'] - v6_formal_sum['total_cost_yuan']
 
     result = dict(
-        version='q2-v6-crossday-dp-hybrid',
+        version='q2-v6-corrected-causal' ,
         selected_threshold=best_threshold,
         january_candidates=tuning_table,
         formal=v6_formal_sum,
@@ -397,13 +370,14 @@ def main():
         worsened_days=sum(r['savings_vs_v1_yuan'] < -1e-5 for r in daily_stats),
         audit=audit_res
     )
-    (OUT / 'experiment.json').write_text(json.dumps(result, ensure_ascii=False, indent=2), encoding='utf-8')
+    serializable = json.loads(json.dumps(result).replace('Infinity', '"disabled"'))
+    (OUT / 'experiment.json').write_text(json.dumps(serializable, ensure_ascii=False, indent=2, allow_nan=False), encoding='utf-8')
 
     # Generate Report
     report_lines = [
-        '# 第二问 V6 实验报告：跨日 DP 终值函数协调与延迟鲁棒混合调度',
+        '# 第二问 V6 实验报告：次日成本插值与因果混合调度（修正版）',
         '',
-        '基于次日场景多阶段 DP 成本函数作为日前终端边界，彻底取消 6000 kWh 软惩罚；日内执行基于跨日保留水平与时延门禁。',
+        '次日共享控制场景 LP 的九点凸插值作为终值近似（上方插值，非精确随机DP）；当前日和次日残差按各自预测提前期构建。取消每日6000软目标，保留评价期末6000约束；最后一天执行可行参考计划。无纠偏候选完全关闭保留水平裁剪。',
         '',
         '## 1. 1月参数优选 (2025-01-15 — 2025-01-31)',
         '',
@@ -443,8 +417,8 @@ def main():
     for m in monthly:
         report_lines.append(f"| {m['month']} | {m['v1_total_cost_yuan']:.2f} | {m['v6_total_cost_yuan']:.2f} | {m['savings_yuan']:.2f} |")
 
-    (ROOT / 'reports/q2_v6_experiment.md').write_text('\n'.join(report_lines), encoding='utf-8')
-    print('Report reports/q2_v6_experiment.md generated successfully.', flush=True)
+    (ROOT / 'reports/q2_v6_corrected_experiment.md').write_text('\n'.join(report_lines), encoding='utf-8')
+    print('Report reports/q2_v6_corrected_experiment.md generated successfully.', flush=True)
 
 
 if __name__ == '__main__':
