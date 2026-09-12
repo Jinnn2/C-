@@ -1,0 +1,163 @@
+V3 model checks passed
+V3 executed through 2025-01-30
+V3 executed through 2025-03-01
+V3 executed through 2025-03-31
+V3 executed through 2025-04-30
+V3 executed through 2025-05-30
+V3 executed through 2025-06-29
+V3 executed through 2025-07-29
+V3 executed through 2025-08-28
+V3 executed through 2025-09-27
+V3 executed through 2025-10-27
+V3 executed through 2025-11-26
+V3 executed through 2025-12-26
+{
+  "results": {
+    "r0_24h": {
+      "formal": {
+        "days": 334,
+        "purchase_kwh": 22141540.16894435,
+        "emergency_kwh": 314169.1467243883,
+        "actual_grid_kwh": 22455709.31566874,
+        "planned_cost_yuan": 13522060.859131992,
+        "emergency_cost_yuan": 1200248.3319779513,
+        "total_cost_yuan": 14722309.191109942,
+        "charge_kwh": 6870675.361477856,
+        "discharge_kwh": 5571862.0427970635,
+        "curtailment_kwh": 3217706.502021282,
+        "emergency_intervals": 9671,
+        "emergency_days": 325,
+        "emergency_while_charging_kwh": 100236.44841356194,
+        "emergency_while_charging_intervals": 2218,
+        "waste_while_discharging_kwh": 680356.0654904789,
+        "soc_start_kwh": 8550.0,
+        "soc_end_kwh": 1200.0000000000005
+      },
+      "annual": {
+        "days": 365,
+        "purchase_kwh": 24630350.610815637,
+        "emergency_kwh": 480666.38691392867,
+        "actual_grid_kwh": 25111016.997729566,
+        "planned_cost_yuan": 15058649.066065598,
+        "emergency_cost_yuan": 1865703.6136367677,
+        "total_cost_yuan": 16924352.679702364,
+        "charge_kwh": 7597263.287724648,
+        "discharge_kwh": 6158103.263056965,
+        "curtailment_kwh": 3399044.834445214,
+        "emergency_intervals": 11058,
+        "emergency_days": 355,
+        "emergency_while_charging_kwh": 124765.49703467925,
+        "emergency_while_charging_intervals": 2540,
+        "waste_while_discharging_kwh": 728482.7484176871,
+        "soc_start_kwh": 6000.0,
+        "soc_end_kwh": 1200.0000000000005
+      },
+      "daily_end_soc_min_kwh": 1199.9999999999966,
+      "daily_end_soc_max_kwh": 1200.0000000000066,
+      "days_ending_at_6000": 0,
+      "days_ending_at_lower_bound": 334,
+      "savings_vs_restricted_v2b_yuan": -134957.23305455036,
+      "solver_seconds": 5.826222800154937
+    },
+    "r1_48h": {
+      "formal": {
+        "days": 334,
+        "purchase_kwh": 22150561.774972808,
+        "emergency_kwh": 314138.33228004316,
+        "actual_grid_kwh": 22464700.10725285,
+        "planned_cost_yuan": 13501035.538172768,
+        "emergency_cost_yuan": 1200139.1121787005,
+        "total_cost_yuan": 14701174.650351468,
+        "charge_kwh": 6879142.249193206,
+        "discharge_kwh": 5572105.221846498,
+        "curtailment_kwh": 3218473.584939476,
+        "emergency_intervals": 9669,
+        "emergency_days": 325,
+        "emergency_while_charging_kwh": 100102.51925688465,
+        "emergency_while_charging_intervals": 2215,
+        "waste_while_discharging_kwh": 680703.2324152002,
+        "soc_start_kwh": 8550.0,
+        "soc_end_kwh": 8550.0
+      },
+      "annual": {
+        "days": 365,
+        "purchase_kwh": 24639372.21684409,
+        "emergency_kwh": 480635.57246958354,
+        "actual_grid_kwh": 25120007.789313674,
+        "planned_cost_yuan": 15037623.745106375,
+        "emergency_cost_yuan": 1865594.393837517,
+        "total_cost_yuan": 16903218.138943892,
+        "charge_kwh": 7605730.1754399985,
+        "discharge_kwh": 6158346.442106399,
+        "curtailment_kwh": 3399811.9173634085,
+        "emergency_intervals": 11056,
+        "emergency_days": 355,
+        "emergency_while_charging_kwh": 124631.56787800197,
+        "emergency_while_charging_intervals": 2537,
+        "waste_while_discharging_kwh": 728829.9153424085,
+        "soc_start_kwh": 6000.0,
+        "soc_end_kwh": 8550.0
+      },
+      "daily_end_soc_min_kwh": 1971.602488091583,
+      "daily_end_soc_max_kwh": 8550.000000000007,
+      "days_ending_at_6000": 0,
+      "days_ending_at_lower_bound": 0,
+      "savings_vs_restricted_v2b_yuan": -113822.69229607657,
+      "solver_seconds": 12.169941199885216
+    },
+    "r2_72h": {
+      "formal": {
+        "days": 334,
+        "purchase_kwh": 22150561.774972808,
+        "emergency_kwh": 314138.33228004316,
+        "actual_grid_kwh": 22464700.10725285,
+        "planned_cost_yuan": 13501035.538172768,
+        "emergency_cost_yuan": 1200139.1121787005,
+        "total_cost_yuan": 14701174.650351468,
+        "charge_kwh": 6879142.249193206,
+        "discharge_kwh": 5572105.221846498,
+        "curtailment_kwh": 3218473.584939476,
+        "emergency_intervals": 9669,
+        "emergency_days": 325,
+        "emergency_while_charging_kwh": 100102.51925688465,
+        "emergency_while_charging_intervals": 2215,
+        "waste_while_discharging_kwh": 680703.2324152002,
+        "soc_start_kwh": 8550.0,
+        "soc_end_kwh": 8550.0
+      },
+      "annual": {
+        "days": 365,
+        "purchase_kwh": 24639372.21684409,
+        "emergency_kwh": 480635.57246958354,
+        "actual_grid_kwh": 25120007.789313674,
+        "planned_cost_yuan": 15037623.745106375,
+        "emergency_cost_yuan": 1865594.393837517,
+        "total_cost_yuan": 16903218.138943892,
+        "charge_kwh": 7605730.1754399985,
+        "discharge_kwh": 6158346.442106399,
+        "curtailment_kwh": 3399811.9173634085,
+        "emergency_intervals": 11056,
+        "emergency_days": 355,
+        "emergency_while_charging_kwh": 124631.56787800197,
+        "emergency_while_charging_intervals": 2537,
+        "waste_while_discharging_kwh": 728829.9153424085,
+        "soc_start_kwh": 6000.0,
+        "soc_end_kwh": 8550.0
+      },
+      "daily_end_soc_min_kwh": 1971.602488091583,
+      "daily_end_soc_max_kwh": 8550.000000000007,
+      "days_ending_at_6000": 0,
+      "days_ending_at_lower_bound": 0,
+      "savings_vs_restricted_v2b_yuan": -113822.69229607657,
+      "solver_seconds": 17.677094299549935
+    }
+  },
+  "comparison": {
+    "common_state_days": 334,
+    "max_abs_day_end_soc_difference_kwh": 0.0,
+    "mean_purchase_l1_difference_kwh": 4.193478565060807e-13,
+    "max_purchase_l1_difference_kwh": 8.185452315956354e-12,
+    "days_different_end_soc": 0,
+    "r2_minus_r1_actual_cost_yuan": 0.0
+  }
+}

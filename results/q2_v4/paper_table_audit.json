@@ -1,0 +1,15 @@
+{
+  "printed_entries": 44,
+  "matched_entries": 44,
+  "max_designated_difference": 0.0004459607871467597,
+  "improved_days": 90,
+  "worsened_days": 11,
+  "unchanged_days": 233,
+  "improved_months": 11,
+  "persisted_forecasts_and_residuals_reconstructed": true,
+  "code_sha256": {
+    "q2_v4.py": "57ddbc90555379611f7cea6431689f3353f3d0eb83eb8f0e4ff974886e87833a",
+    "solve_q2_v4.py": "7c316fc3c291db2f6041d7b0ef7677e6560f0853b4be9ca254379a86f8baea75",
+    "validate_q2_v4.py": "887869a3cf827a2ee3a1c7c9fed2482fa67757ec36d8030980738c2cda0933e6"
+  }
+}

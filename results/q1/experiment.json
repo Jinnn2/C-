@@ -1,0 +1,170 @@
+{
+  "model": "144-step grid-side energy MILP",
+  "scipy_version": "1.18.0",
+  "soc_boundary_kwh": 6000,
+  "charge_efficiency": 0.9,
+  "discharge_efficiency": 0.9,
+  "strict_solver": {
+    "status": 0,
+    "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "objective_yuan": 35126.948589289634,
+    "elapsed_seconds": 0.038092799979494885,
+    "relative_gap": 0.0,
+    "dual_bound_yuan": 35126.948589289634,
+    "node_count": 1
+  },
+  "lp_solver": {
+    "status": 0,
+    "message": "Optimization terminated successfully. (HiGHS Status 7: Optimal)",
+    "objective_yuan": 35126.94858928963,
+    "elapsed_seconds": 0.006523599993670359,
+    "relative_gap": 0.0,
+    "dual_bound_yuan": 35126.94858928963,
+    "node_count": 0
+  },
+  "audits": {
+    "strict": {
+      "passed": true,
+      "checks": {
+        "finite": true,
+        "nonnegative": true,
+        "power_limit": true,
+        "soc_bounds": true,
+        "initial_final_soc": true,
+        "supply_balance": true,
+        "storage_dynamics": true,
+        "soc_continuity": true,
+        "round_trip_energy": true,
+        "daily_energy_identity": true,
+        "cost_columns": true,
+        "charge_discharge_exclusive": true,
+        "solver_objective": true
+      },
+      "max_balance_error_kwh": 1.1368683772161603e-13,
+      "max_soc_dynamics_error_kwh": 8.810729923425242e-13,
+      "max_simultaneous_kwh": 0.0,
+      "soc_min_kwh": 1200.0,
+      "soc_max_kwh": 10800.0,
+      "purchase_kwh": 59482.69899835391,
+      "charge_kwh": 20740.666131687245,
+      "discharge_kwh": 16799.939566666668,
+      "curtailed_kwh": 0.0,
+      "cost_yuan": 35126.948589289634,
+      "storage_loss_kwh": 3940.7265650205773
+    },
+    "lp_relaxation": {
+      "passed": true,
+      "checks": {
+        "finite": true,
+        "nonnegative": true,
+        "power_limit": true,
+        "soc_bounds": true,
+        "initial_final_soc": true,
+        "supply_balance": true,
+        "storage_dynamics": true,
+        "soc_continuity": true,
+        "round_trip_energy": true,
+        "daily_energy_identity": true,
+        "cost_columns": true,
+        "solver_objective": true
+      },
+      "max_balance_error_kwh": 1.1368683772161603e-13,
+      "max_soc_dynamics_error_kwh": 8.810729923425242e-13,
+      "max_simultaneous_kwh": 0.0,
+      "soc_min_kwh": 1200.0,
+      "soc_max_kwh": 10800.0,
+      "purchase_kwh": 59482.69899835391,
+      "charge_kwh": 20740.666131687245,
+      "discharge_kwh": 16799.939566666668,
+      "curtailed_kwh": 0.0,
+      "cost_yuan": 35126.948589289634,
+      "storage_loss_kwh": 3940.7265650205773
+    },
+    "no_storage": {
+      "passed": true,
+      "checks": {
+        "finite": true,
+        "nonnegative": true,
+        "power_limit": true,
+        "soc_bounds": true,
+        "initial_final_soc": true,
+        "supply_balance": true,
+        "storage_dynamics": true,
+        "soc_continuity": true,
+        "round_trip_energy": true,
+        "daily_energy_identity": true,
+        "cost_columns": true,
+        "charge_discharge_exclusive": true
+      },
+      "max_balance_error_kwh": 1.1368683772161603e-13,
+      "max_soc_dynamics_error_kwh": 0.0,
+      "max_simultaneous_kwh": 0.0,
+      "soc_min_kwh": 6000.0,
+      "soc_max_kwh": 6000.0,
+      "purchase_kwh": 61789.9354,
+      "charge_kwh": 0.0,
+      "discharge_kwh": 0.0,
+      "curtailed_kwh": 6247.962966666667,
+      "cost_yuan": 48052.046590846665,
+      "storage_loss_kwh": 0.0
+    }
+  },
+  "savings_yuan": 12925.098001557031,
+  "savings_percent": 26.898121762870154,
+  "lp_gap_yuan": 7.275957614183426e-12,
+  "export_readback_passed": true,
+  "injected_defect_rejected": true,
+  "originals_unchanged": true,
+  "inputs": [
+    {
+      "path": "C题.pdf",
+      "bytes": 354389,
+      "sha256": "2c098f6ae9dd47ae965aebdec3b9facf3de6c173f999783c1012c08fc5fb9d2d"
+    },
+    {
+      "path": "附件/附件1.xlsx",
+      "bytes": 16003,
+      "sha256": "66b87134f5ecccd68184d3539bb1293ef039f9e0fdd955a589b9bfa7f227c377"
+    },
+    {
+      "path": "附件/附件2.xlsx",
+      "bytes": 907128,
+      "sha256": "2e95fd446bfafa0d8c59577b5c2e2ea8b3f1def20dde54a3062556f4da9b4c72"
+    },
+    {
+      "path": "附件/附件3.xlsx",
+      "bytes": 293526,
+      "sha256": "8a61b06c52bd0d639a1cc37c61a7d9f5b75edcbca718f64c1bd3498ec9f9d843"
+    },
+    {
+      "path": "附件/附件4.xlsx",
+      "bytes": 409790,
+      "sha256": "20e9c93aeab5e8e21ae4dd15587f9e190f7408692504c1319598461cd654fe71"
+    },
+    {
+      "path": "附件/附件5/result1.xlsx",
+      "bytes": 13323,
+      "sha256": "28360e0974e7d6065394a8aba4e14a86773ae0036cc7d3ea1b211b515b03d688"
+    },
+    {
+      "path": "附件/附件5/result2.xlsx",
+      "bytes": 18397,
+      "sha256": "1c26494cfc6d754e0bd9bff7e13e1126a73d2d2da6c5336eb251d89b9a1a1a47"
+    },
+    {
+      "path": "附件/附件5/result3.xlsx",
+      "bytes": 265429,
+      "sha256": "c59da470cabd0be23f602c95c8aa9d11ec224a0cdac216b3e1f218e65d006bdc"
+    },
+    {
+      "path": "附件/附件5/result4-2.xlsx",
+      "bytes": 18397,
+      "sha256": "1c26494cfc6d754e0bd9bff7e13e1126a73d2d2da6c5336eb251d89b9a1a1a47"
+    },
+    {
+      "path": "附件/附件5/result4-3.xlsx",
+      "bytes": 265429,
+      "sha256": "c59da470cabd0be23f602c95c8aa9d11ec224a0cdac216b3e1f218e65d006bdc"
+    }
+  ]
+}

@@ -1,0 +1,281 @@
+{
+  "version": "q2-v5-v2b-contract-v4-delayed1",
+  "method": "V2-B exact day-ahead purchase contract + V4 delayed_1 DP storage control",
+  "formal": {
+    "days": 334,
+    "purchase_kwh": 22167162.27924005,
+    "emergency_kwh": 401280.66169059783,
+    "actual_grid_kwh": 22568442.940930646,
+    "planned_cost_yuan": 13508934.523097722,
+    "emergency_cost_yuan": 1782386.4699861887,
+    "total_cost_yuan": 15291320.99308391,
+    "charge_kwh": 6391794.282065418,
+    "discharge_kwh": 5177093.694372786,
+    "curtailment_kwh": 3414552.8582713497,
+    "emergency_intervals": 16307,
+    "emergency_days": 334,
+    "emergency_while_charging_kwh": 179808.25863240895,
+    "emergency_while_charging_intervals": 8263,
+    "waste_while_discharging_kwh": 196584.90743037168,
+    "soc_start_kwh": 5999.999999999998,
+    "soc_end_kwh": 6288.526778002317
+  },
+  "v2b": {
+    "days": 334,
+    "purchase_kwh": 22167162.27924005,
+    "emergency_kwh": 282315.44716869044,
+    "actual_grid_kwh": 22449477.72640874,
+    "planned_cost_yuan": 13508934.523097722,
+    "emergency_cost_yuan": 1078417.4349576717,
+    "total_cost_yuan": 14587351.958055392,
+    "charge_kwh": 6988433.564819711,
+    "discharge_kwh": 5660631.1875039665,
+    "curtailment_kwh": 3182485.854126328,
+    "emergency_intervals": 9212,
+    "emergency_days": 329,
+    "emergency_while_charging_kwh": 98763.67992164406,
+    "emergency_while_charging_intervals": 2223,
+    "waste_while_discharging_kwh": 680936.4791299285,
+    "soc_start_kwh": 5999.999999999998,
+    "soc_end_kwh": 6000.000000000002
+  },
+  "warmup": {
+    "days": 31,
+    "purchase_kwh": 2417394.6501408964,
+    "emergency_kwh": 179748.0585725755,
+    "actual_grid_kwh": 2597142.708713472,
+    "planned_cost_yuan": 1488973.5056269125,
+    "emergency_cost_yuan": 712898.665588107,
+    "total_cost_yuan": 2201872.1712150197,
+    "charge_kwh": 718693.8009373678,
+    "discharge_kwh": 582141.978759268,
+    "curtailment_kwh": 126968.2428853719,
+    "emergency_intervals": 1977,
+    "emergency_days": 30,
+    "emergency_while_charging_kwh": 27849.86115285121,
+    "emergency_while_charging_intervals": 454,
+    "waste_while_discharging_kwh": 34680.8892649109,
+    "soc_start_kwh": 6000.0,
+    "soc_end_kwh": 5999.999999999998
+  },
+  "difference_vs_v2b_yuan": 703969.0350285172,
+  "difference_vs_v2b_percent": 4.825886405241442,
+  "improved_days": 35,
+  "worsened_days": 299,
+  "monthly_comparison": [
+    {
+      "month": "2025-02",
+      "v2b_total_cost_yuan": 1260450.0215339102,
+      "v5_total_cost_yuan": 1311200.769924996,
+      "difference_yuan": 50750.74839108577,
+      "v2b_emergency_cost_yuan": 51588.7656232266,
+      "v5_emergency_cost_yuan": 102339.51401431243
+    },
+    {
+      "month": "2025-03",
+      "v2b_total_cost_yuan": 1210330.7203780846,
+      "v5_total_cost_yuan": 1250437.848479691,
+      "difference_yuan": 40107.12810160639,
+      "v2b_emergency_cost_yuan": 95230.66595783026,
+      "v5_emergency_cost_yuan": 135337.7940594368
+    },
+    {
+      "month": "2025-04",
+      "v2b_total_cost_yuan": 1024659.4528019764,
+      "v5_total_cost_yuan": 1082936.8766353885,
+      "difference_yuan": 58277.42383341212,
+      "v2b_emergency_cost_yuan": 89540.26861819123,
+      "v5_emergency_cost_yuan": 147817.6924516034
+    },
+    {
+      "month": "2025-05",
+      "v2b_total_cost_yuan": 1076294.6962692963,
+      "v5_total_cost_yuan": 1145895.3128476865,
+      "difference_yuan": 69600.61657839012,
+      "v2b_emergency_cost_yuan": 98654.190545053,
+      "v5_emergency_cost_yuan": 168254.8071234431
+    },
+    {
+      "month": "2025-06",
+      "v2b_total_cost_yuan": 1496901.787110527,
+      "v5_total_cost_yuan": 1588080.7036413027,
+      "difference_yuan": 91178.9165307756,
+      "v2b_emergency_cost_yuan": 167517.70551968782,
+      "v5_emergency_cost_yuan": 258696.62205046348
+    },
+    {
+      "month": "2025-07",
+      "v2b_total_cost_yuan": 1622542.4799235943,
+      "v5_total_cost_yuan": 1714561.150922481,
+      "difference_yuan": 92018.6709988867,
+      "v2b_emergency_cost_yuan": 144583.94122178276,
+      "v5_emergency_cost_yuan": 236602.61222066949
+    },
+    {
+      "month": "2025-08",
+      "v2b_total_cost_yuan": 1383711.1271719956,
+      "v5_total_cost_yuan": 1450473.9734851986,
+      "difference_yuan": 66762.84631320299,
+      "v2b_emergency_cost_yuan": 96408.31593872306,
+      "v5_emergency_cost_yuan": 163171.1622519262
+    },
+    {
+      "month": "2025-09",
+      "v2b_total_cost_yuan": 1242747.1387167561,
+      "v5_total_cost_yuan": 1295090.4882302242,
+      "difference_yuan": 52343.3495134681,
+      "v2b_emergency_cost_yuan": 107738.09240560912,
+      "v5_emergency_cost_yuan": 160081.4419190772
+    },
+    {
+      "month": "2025-10",
+      "v2b_total_cost_yuan": 1199055.5276922246,
+      "v5_total_cost_yuan": 1253943.2487964623,
+      "difference_yuan": 54887.72110423772,
+      "v2b_emergency_cost_yuan": 83691.52356501663,
+      "v5_emergency_cost_yuan": 138579.24466925423
+    },
+    {
+      "month": "2025-11",
+      "v2b_total_cost_yuan": 1318847.8828597837,
+      "v5_total_cost_yuan": 1371190.129422487,
+      "difference_yuan": 52342.24656270328,
+      "v2b_emergency_cost_yuan": 58528.80708154804,
+      "v5_emergency_cost_yuan": 110871.05364425134
+    },
+    {
+      "month": "2025-12",
+      "v2b_total_cost_yuan": 1751811.1235972438,
+      "v5_total_cost_yuan": 1827510.4906979918,
+      "difference_yuan": 75699.367100748,
+      "v2b_emergency_cost_yuan": 84935.15848100308,
+      "v5_emergency_cost_yuan": 160634.52558175102
+    }
+  ],
+  "validation": {
+    "models": {
+      "delayed1_execution_audit": true,
+      "rows": 144,
+      "finite": true
+    },
+    "v2b_contract_purchase_exact": true,
+    "execution": {
+      "passed": true,
+      "rows": 48096,
+      "checks": {
+        "finite": true,
+        "nonnegative": true,
+        "balance": true,
+        "dynamics": true,
+        "bounds": true,
+        "power": true,
+        "exclusive": true,
+        "settlement": true,
+        "plan_unchanged": true,
+        "continuity": true,
+        "chronology": true,
+        "forecast_cutoff": true,
+        "no_emergency_and_waste": true,
+        "issued_control_executed": true,
+        "causal_control": true,
+        "global_energy_identity": true
+      },
+      "max_residuals": {
+        "balance": 4.547473508864641e-13,
+        "dynamics": 9.094947017729282e-13,
+        "cost": 9.094947017729282e-13
+      },
+      "global_energy_error_kwh": -5.807123670820147e-10,
+      "feedback_rule_verified": true,
+      "observation_mode": "delayed_1",
+      "current_observation_is_assumed_instantaneous_proxy": false,
+      "emergency_charging_is_allowed_by_delayed_information": true
+    },
+    "execution_csv": true,
+    "physical_audit": {
+      "passed": true,
+      "rows": 52560,
+      "checks": {
+        "finite": true,
+        "nonnegative": true,
+        "balance": true,
+        "dynamics": true,
+        "bounds": true,
+        "power": true,
+        "exclusive": true,
+        "settlement": true,
+        "plan_unchanged": true,
+        "continuity": true,
+        "chronology": true,
+        "forecast_cutoff": true,
+        "no_emergency_and_waste": true,
+        "issued_control_executed": true,
+        "causal_control": true,
+        "global_energy_identity": true
+      },
+      "max_residuals": {
+        "balance": 4.547473508864641e-13,
+        "dynamics": 9.094947017729282e-13,
+        "cost": 9.094947017729282e-13
+      },
+      "global_energy_error_kwh": -6.72400801704498e-10
+    },
+    "future_suffix_invariance": true,
+    "workbook_readback": true,
+    "previous_artifacts_unchanged": true
+  },
+  "source_hashes": [
+    {
+      "path": "C题.pdf",
+      "bytes": 354389,
+      "sha256": "2c098f6ae9dd47ae965aebdec3b9facf3de6c173f999783c1012c08fc5fb9d2d"
+    },
+    {
+      "path": "附件/附件1.xlsx",
+      "bytes": 16003,
+      "sha256": "66b87134f5ecccd68184d3539bb1293ef039f9e0fdd955a589b9bfa7f227c377"
+    },
+    {
+      "path": "附件/附件2.xlsx",
+      "bytes": 907128,
+      "sha256": "2e95fd446bfafa0d8c59577b5c2e2ea8b3f1def20dde54a3062556f4da9b4c72"
+    },
+    {
+      "path": "附件/附件3.xlsx",
+      "bytes": 293526,
+      "sha256": "8a61b06c52bd0d639a1cc37c61a7d9f5b75edcbca718f64c1bd3498ec9f9d843"
+    },
+    {
+      "path": "附件/附件4.xlsx",
+      "bytes": 409790,
+      "sha256": "20e9c93aeab5e8e21ae4dd15587f9e190f7408692504c1319598461cd654fe71"
+    },
+    {
+      "path": "附件/附件5/result1.xlsx",
+      "bytes": 13323,
+      "sha256": "28360e0974e7d6065394a8aba4e14a86773ae0036cc7d3ea1b211b515b03d688"
+    },
+    {
+      "path": "附件/附件5/result2.xlsx",
+      "bytes": 18397,
+      "sha256": "1c26494cfc6d754e0bd9bff7e13e1126a73d2d2da6c5336eb251d89b9a1a1a47"
+    },
+    {
+      "path": "附件/附件5/result3.xlsx",
+      "bytes": 265429,
+      "sha256": "c59da470cabd0be23f602c95c8aa9d11ec224a0cdac216b3e1f218e65d006bdc"
+    },
+    {
+      "path": "附件/附件5/result4-2.xlsx",
+      "bytes": 18397,
+      "sha256": "1c26494cfc6d754e0bd9bff7e13e1126a73d2d2da6c5336eb251d89b9a1a1a47"
+    },
+    {
+      "path": "附件/附件5/result4-3.xlsx",
+      "bytes": 265429,
+      "sha256": "c59da470cabd0be23f602c95c8aa9d11ec224a0cdac216b3e1f218e65d006bdc"
+    }
+  ],
+  "database_sha256": "f65c73800f7cc45127d6aaf7b8fd3096ac0c2c6fb4b50da1634630b579c833d5",
+  "scipy_version": "1.18.0"
+}
